@@ -16,7 +16,7 @@ services:
       - MSG_PASS=${MSG_PASS}
       - TEST=${TEST}
       - MESSAGING_HOST=messaging  
-      - PYTHONBUFFERED=1
+      - PYTHONUNBUFFERED=1
     command: ["./wait-for-it.sh","messaging:5672","-t","59","--","./run.sh"]
     depends_on:
       - messaging

@@ -11,10 +11,9 @@ print("hello, my name is {name}. {user} -> {password}".format(name=NAME,user=MSG
 print("---------------------------------------")
 
 
-#connection = pika.BlockingConnection(pika.ConnectionParameters(HOST,5672,'/',pika.PlainCredentials(
-#MSG_USER,MSG_PASS)))
+connection = pika.BlockingConnection(pika.ConnectionParameters(HOST,5672,'/',pika.PlainCredentials(MSG_USER,MSG_PASS)))
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(HOST,"5672","/",pika.PlainCredentials("example","example")))
+#connection = pika.BlockingConnection(pika.ConnectionParameters(HOST,"5672","/",pika.PlainCredentials("example","example")))
 
 channel = connection.channel()
 

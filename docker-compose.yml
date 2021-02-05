@@ -1,0 +1,47 @@
+version: "3"
+
+services:
+  front-end:
+    build: ./front_end
+    ports:
+      - "3000:3000"  
+    #uncomment for development
+    volumes:
+      - "./front_end:/app"
+  back-end:
+    build: ./back_end
+    environment:
+      - NODE_ENV=development
+      - MSG_USER=${MSG_USER}
+      - MSG_PASS=${MSG_PASS}
+      - TEST=${TEST}
+      - MESSAGING_HOST=messaging  
+      - PYTHONBUFFERED=1
+    command: ["./wait-for-it.sh","messaging:5672","-t","59","--","./run.sh"]
+    depends_on:
+      - messaging
+  messaging:
+    build: ./messaging
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=${MSG_USER}
+      - RABBITMQ_DEFAULT_PASS=${MSG_PASS}
+    healthcheck:
+      test: ["CMD","curl","-f","http://localhost:15672"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+  db:
+    image: postgres:13.1-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:
